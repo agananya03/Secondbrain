@@ -91,13 +91,22 @@ app.get("/api/v1/content", middleware_1.userMiddleware, (req, res) => __awaiter(
     const userId = req.userId;
     const content = yield db_1.ContentModel.find({
         userId: userId
-    }).populate("userId");
+    }).populate("userId", "username");
     res.json({
         content
     });
 }));
-app.delete("/api/v1/content", (req, res) => {
-});
+app.delete("/api/v1/content", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const contentId = req.body.contentId;
+    yield db_1.ContentModel.deleteMany({
+        contentId,
+        //@ts-ignore
+        userId: userId
+    });
+    res.json({
+        message: "content deleted"
+    });
+}));
 app.post("/api/v1/brain/share", (req, res) => {
 });
 app.get("/api/v1/brain/:shareLink", (req, res) => {

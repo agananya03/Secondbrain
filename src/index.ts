@@ -2,7 +2,7 @@ import express from "express"
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import {z} from "zod";
-import { ContentModel, UserModel } from "./db";
+import { ContentModel, UserModel, LinkModel } from "./db";
 import bcrypt from "bcryptjs"
 import { userMiddleware } from "./middleware";
 const JWT_SECRET = "123123";
@@ -65,6 +65,7 @@ app.post("/api/v1/content",userMiddleware, async (req,res)=>{
     const type = req.body.type;
     await ContentModel.create({
         link,type,
+        title: req.body.title,
         //@ts-ignore
         userId: req.userId,
         tags: []
@@ -94,8 +95,41 @@ app.delete("/api/v1/content", async (req,res)=>{
         message: "content deleted"
     })
 })
-app.post("/api/v1/brain/share", (req,res)=>{
+app.post("/api/v1/brain/share", async (req,res)=>{
+    const share = req.body.share;
+    if (share) {
+            const existingLink = await LinkModel.findOne({
+                //@ts-ignore
+                userId: req.userId
+            });
 
+            if (existingLink) {
+                res.json({
+                    hash: existingLink.hash
+                })
+                return;
+            }
+            //@ts-ignore
+            const hash = random(10);
+            await LinkModel.create({
+                //@ts-ignore
+                userId: req.userId,
+                hash: hash
+            })
+
+            res.json({
+                hash
+            })
+    } else {
+        await LinkModel.deleteOne({
+            //@ts-ignore
+            userId: req.userId
+        });
+
+        res.json({
+            message: "Removed link"
+        })
+    }
 })
 app.get("/api/v1/brain/:shareLink", (req,res)=>{
 
