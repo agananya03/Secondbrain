@@ -5,6 +5,7 @@ import {z} from "zod";
 import { ContentModel, UserModel, LinkModel } from "./db";
 import bcrypt from "bcryptjs"
 import { userMiddleware } from "./middleware";
+import { random } from "./utils";
 const JWT_SECRET = "123123";
 const app = express();
 app.use(express.json());
@@ -109,7 +110,6 @@ app.post("/api/v1/brain/share", async (req,res)=>{
                 })
                 return;
             }
-            //@ts-ignore
             const hash = random(10);
             await LinkModel.create({
                 //@ts-ignore
@@ -118,7 +118,7 @@ app.post("/api/v1/brain/share", async (req,res)=>{
             })
 
             res.json({
-                hash
+                 hash
             })
     } else {
         await LinkModel.deleteOne({
@@ -131,7 +131,32 @@ app.post("/api/v1/brain/share", async (req,res)=>{
         })
     }
 })
-app.get("/api/v1/brain/:shareLink", (req,res)=>{
-
+app.get("/api/v1/brain/:shareLink", async (req,res)=>{
+    const hash = req.params.shareLink;
+    const link = await LinkModel.findOne({
+        hash
+    });
+    if(!link) {
+        res.status(411).json({
+            message: "sorry incorrect input"
+        })
+        return;
+    }   
+    const content = await ContentModel.find({
+        userId: link.userId
+    })
+    const user = await UserModel.findOne({
+        _id: link.userId
+    })
+    if(!user){
+        res.status(411).json({
+            message: "user not found, some error"
+        })
+        return;
+    }
+    res.json({
+        username: user.username,
+        content: content
+    })
 })
 app.listen(3000);
