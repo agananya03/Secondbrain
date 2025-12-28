@@ -172,18 +172,6 @@ Secondbrain/
 - [ ] Implement refresh token mechanism
 - [ ] Add user profile management
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## Author
-
-**Agananya** - [GitHub Profile](https://github.com/agananya03)
-
 ---
 
 Built with ❤️ using TypeScript and Express.js
