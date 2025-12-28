@@ -162,16 +162,6 @@ Secondbrain/
 - Middleware protection on sensitive routes
 - Input validation using Zod schemas
 
-## Future Enhancements
-
-- [ ] Add tags functionality for content organization
-- [ ] Implement content search and filtering
-- [ ] Add pagination for content retrieval
-- [ ] Support multiple content types (videos, documents, etc.)
-- [ ] Add rate limiting for API endpoints
-- [ ] Implement refresh token mechanism
-- [ ] Add user profile management
-
 ---
 
 Built with ❤️ using TypeScript and Express.js
